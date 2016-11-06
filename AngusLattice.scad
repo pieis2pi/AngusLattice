@@ -12,11 +12,11 @@
 diameter = 2;
 side_length = 40.0;
 side_number = 3;
-lattice_number = 2;
+lattice_number = 4;
 base_height=1.0;
 base_scale=1.5;
 hole = false; // hole for little light.
-$fn = 30;
+$fn = 20;
 angle = asin(1/sqrt(3)); // angle to roatate to get isometric perspective.
 // In terms of the above the height of the final object is:
 // height = length/side_number*sin(angle)*(3*side_number-1)+diameter;
@@ -54,10 +54,10 @@ union(){
 					lattice(length,side_number,diameter);
 		translate([0,0,-length/side_number*sin(angle)])
 			cylinder(h=length/side_number*sin(angle),
-						d=2*length/side_number*cos(angle)*base_scale);}
+						d=2*length/side_number*cos(angle)*base_scale,$fn=50);}
 	if(hole)
 		difference(){
-			cylinder(h=base_height,d=2*length/side_number*cos(angle)*base_scale);
-			cylinder(h=base_height,d=2*length/side_number*cos(angle)/base_scale);}
+			cylinder(h=base_height,d=2*length/side_number*cos(angle)*base_scale,$fn=50);
+			cylinder(h=base_height,d=2*length/side_number*cos(angle)/base_scale,$fn=50);}
 	else
-		cylinder(h=base_height,d=2*length/side_number*cos(angle)*base_scale);}
+		cylinder(h=base_height,d=2*length/side_number*cos(angle)*base_scale,$fn=50);}
