@@ -58,21 +58,6 @@ union(){
 									lattice(length,side_number,diameter);}
 		translate([0,0,-length/2])
 			cylinder(h=length/2,d=length*sqrt(2)+2*diameter,$fn=50);}
-	cylinder(h=base_height,d=length*sqrt(2)+2*diameter,$fn=50);}
-/* // original code.
-union(){
-	difference(){
-		translate([0,0,-length/side_number*sin(angle)+base_height])
-			for(n=[1:lattice_number])
-				rotate([45,-angle,(n-1)*120/lattice_number])
-					lattice(length,side_number,diameter);
-		translate([0,0,-length/side_number*sin(angle)])
-			cylinder(h=length/side_number*sin(angle),
-						d=2*length/side_number*cos(angle)*base_scale);}
-	if(hole)
-		difference(){
-			cylinder(h=base_height,d=2*length/side_number*cos(angle)*base_scale);
-			cylinder(h=base_height,d=2*length/side_number*cos(angle)/base_scale);}
-	else
-		cylinder(h=base_height,d=2*length/side_number*cos(angle)*base_scale);}
-*/
+	cylinder(h=base_height,d1=length*sqrt(2)+3*diameter,
+					d2=length*sqrt(2)+2*diameter,$fn=50);}
+

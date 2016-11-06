@@ -57,7 +57,10 @@ union(){
 						d=2*length/side_number*cos(angle)*base_scale,$fn=50);}
 	if(hole)
 		difference(){
-			cylinder(h=base_height,d=2*length/side_number*cos(angle)*base_scale,$fn=50);
-			cylinder(h=base_height,d=2*length/side_number*cos(angle)/base_scale,$fn=50);}
+			cylinder(h=base_height,d1=2*length/side_number*cos(angle)*base_scale,
+						d2=2*length/side_number*cos(angle)*base_scale*0.9,$fn=50);
+			cylinder(h=base_height,d1=2*length/side_number*cos(angle)/base_scale*0.9,
+						d2=2*length/side_number*cos(angle)/base_scale,$fn=50);}
 	else
-		cylinder(h=base_height,d=2*length/side_number*cos(angle)*base_scale,$fn=50);}
+		cylinder(h=base_height,d1=2*length/side_number*cos(angle)*base_scale,
+					d2=2*length/side_number*cos(angle)*base_scale*0.9,$fn=50);}
