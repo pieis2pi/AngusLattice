@@ -79,4 +79,5 @@ union(){
 									lattice(bar_type,length,side_number,diameter);}
 		translate([0,0,-length/2])
 			cylinder(h=length/2,d=length*sqrt(2)+2*diameter,$fn=50);}
-	cylinder(h=base_height,d=length*sqrt(2)+2*diameter,$fn=50);}
+	cylinder(h=base_height,d1=length*sqrt(2)+3*diameter,
+					d2=length*sqrt(2)+2*diameter,$fn=50);}
