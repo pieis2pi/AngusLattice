@@ -9,7 +9,8 @@
  * -Evan Thomas
  * ----------------------------------------------------------------------------
  */
-bar_type = "cube";
+bar_type = "rounded";
+roundedness = 0.5; // only used if previous option is "rounded". (0.0=cube 1.0=sphere)
 diameter = 2;
 side_length = 40.0;
 side_number = 3;
@@ -38,15 +39,21 @@ module dodecahedron(height)	// This module taken from OpenSCAD User Manual
 						rotate([2*atan((1+sqrt(5))/2),0,0])
 							cube([2,2,1],center=true);}}}}
 
+module rounded_cube(length,roundedness){
+	minkowski(){
+		cube(size=length*(1-roundedness),center=true);
+		sphere(d=length*roundedness,$fn=20);}}
+
 module basic_shape(type,diameter){
-	if(type=="sphere")
-		sphere(d=diameter,$fn=30);
-	else if (type=="cube")
+	if(type=="sphere")			// computationally demanding. can decrease $fn. 
+		sphere(d=diameter,$fn=20);
+	else if(type=="cube")		// easiest computationally.
 		cube(size=diameter,center=true);
-	else if (type=="dodeca")
+	else if(type=="dodeca")		// looks great except for top point.
 		dodecahedron(height=diameter);
-}	// dodecahedron looks great except for top point.
-		
+	else if(type=="rounded")	// computationally demanding. looks nice though.
+		rounded_cube(diameter,roundedness);
+}
 
 module lattice(type,length,number,diameter){
 	spacing=length/number;
@@ -77,7 +84,7 @@ union(){
 					lattice(bar_type,length,side_number,diameter);
 		translate([0,0,-length/side_number*sin(angle)-diameter])
 			cylinder(h=length/side_number*sin(angle)+diameter,
-						d=2*length/side_number*cos(angle)*base_scale,$fn=30);}
+						d=2*length/side_number*cos(angle)*base_scale,$fn=50);}
 	if(base_bevel){
 		if(hole)
 			difference(){

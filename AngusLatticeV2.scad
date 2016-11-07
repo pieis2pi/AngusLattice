@@ -9,7 +9,8 @@
  * -Evan Thomas
  * ----------------------------------------------------------------------------
  */
-bar_type = "cube";
+bar_type = "rounded";
+roundedness = 0.5; // only used if previous option is "rounded". (0.0=cube 1.0=sphere)
 diameter = 2;
 side_length = 40.0;
 side_number = 1;
@@ -38,13 +39,20 @@ module dodecahedron(height)	// This module taken from OpenSCAD User Manual
 						rotate([2*atan((1+sqrt(5))/2),0,0])
 							cube([2,2,1],center=true);}}}}
 
+module rounded_cube(length,roundedness){
+	minkowski(){
+		cube(size=length*(1-roundedness),center=true);
+		sphere(d=length*roundedness,$fn=20);}}
+
 module basic_shape(type,diameter){
-	if(type=="sphere")
-		sphere(d=diameter,$fn=30);
-	else if (type=="cube")
+	if(type=="sphere")			// computationally demanding. can decrease $fn. 
+		sphere(d=diameter,$fn=20);
+	else if(type=="cube")		// easiest computationally.
 		cube(size=diameter,center=true);
-	else if (type=="dodeca")
+	else if(type=="dodeca")		// looks great except for top point.
 		dodecahedron(height=diameter);
+	else if(type=="rounded")	// computationally demanding. looks nice though.
+		rounded_cube(diameter,roundedness);
 }
 
 module lattice(type,length,number,diameter){
