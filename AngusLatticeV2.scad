@@ -12,10 +12,11 @@
 bar_type = "cube";
 diameter = 2;
 side_length = 40.0;
-side_number = 2;
+side_number = 1;
 lattice_number = 2;
-base_height=1.0;
-base_scale=1.5; // no longer used.
+base_height = 1.0;
+base_scale = 1.2;
+base_bevel = false; // base can have a bevel or not.
 hole = false; // hole for little light.
 angle = asin(1/sqrt(3)); // angle to roatate to get isometric perspective.
 // In terms of the above the height of the final object is:
@@ -29,13 +30,13 @@ module dodecahedron(height)	// This module taken from OpenSCAD User Manual
 {					// https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/Print_version
 	scale([height,height,height]){	//scale by height parameter
 		intersection(){					//make a cube
-			cube([2,2,1], center = true); 
+			cube([2,2,1],center=true); 
 				intersection_for(i=[0:4]){	//loop i from 0 to 4, and intersect results
 			//make a cube, rotate it 2*atan((1+sqrt(5))/2) degrees around the X axis,
 				//then 72*i around the Z axis
 					rotate([0,0,72*i])
 						rotate([2*atan((1+sqrt(5))/2),0,0])
-							cube([2,2,1], center = true);}}}}
+							cube([2,2,1],center=true);}}}}
 
 module basic_shape(type,diameter){
 	if(type=="sphere")
@@ -79,5 +80,20 @@ union(){
 									lattice(bar_type,length,side_number,diameter);}
 		translate([0,0,-length/2])
 			cylinder(h=length/2,d=length*sqrt(2)+2*diameter,$fn=50);}
-	cylinder(h=base_height,d1=length*sqrt(2)+3*diameter,
-					d2=length*sqrt(2)+2*diameter,$fn=50);}
+	if(base_bevel){
+		if(hole)
+			difference(){
+				cylinder(h=base_height,d1=length*sqrt(2)*base_scale,
+							d2=length*sqrt(2)*base_scale*0.9,$fn=50);
+				cylinder(h=base_height,d1=length*sqrt(2)/base_scale/2*0.9,
+							d2=length*sqrt(2)/base_scale/2,$fn=50);}
+		else
+			cylinder(h=base_height,d1=length*sqrt(2)*base_scale,
+						d2=length*sqrt(2)*base_scale*0.9,$fn=50);}
+	else{
+		if(hole)
+			difference(){
+				cylinder(h=base_height,d=length*sqrt(2)*base_scale,$fn=50);
+				cylinder(h=base_height,d=length*sqrt(2)/base_scale/2,$fn=50);}
+		else
+			cylinder(h=base_height,d=length*sqrt(2)*base_scale,$fn=50);}}

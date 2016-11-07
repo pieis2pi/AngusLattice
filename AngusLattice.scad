@@ -9,13 +9,14 @@
  * -Evan Thomas
  * ----------------------------------------------------------------------------
  */
-bar_type = "dodeca";
+bar_type = "cube";
 diameter = 2;
 side_length = 40.0;
 side_number = 3;
 lattice_number = 2;
-base_height=1.0;
-base_scale=1.5;
+base_height = 1.0;
+base_scale = 1.5;
+base_bevel = false; // base can have a bevel or not.
 hole = false; // hole for little light.
 angle = asin(1/sqrt(3)); // angle to roatate to get isometric perspective.
 // In terms of the above the height of the final object is:
@@ -29,13 +30,13 @@ module dodecahedron(height)	// This module taken from OpenSCAD User Manual
 {					// https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/Print_version
 	scale([height,height,height]){	//scale by height parameter
 		intersection(){	//make a cube
-			cube([2,2,1], center = true); 
+			cube([2,2,1],center=true); 
 				intersection_for(i=[0:4]){	//loop i from 0 to 4, and intersect results
 		//make a cube, rotate it 2*atan((1+sqrt(5))/2) degrees around the X axis,
 		//then 72*i around the Z axis
 					rotate([0,0,72*i])
 						rotate([2*atan((1+sqrt(5))/2),0,0])
-							cube([2,2,1], center = true);}}}}
+							cube([2,2,1],center=true);}}}}
 
 module basic_shape(type,diameter){
 	if(type=="sphere")
@@ -77,12 +78,20 @@ union(){
 		translate([0,0,-length/side_number*sin(angle)-diameter])
 			cylinder(h=length/side_number*sin(angle)+diameter,
 						d=2*length/side_number*cos(angle)*base_scale,$fn=30);}
-	if(hole)
-		difference(){
+	if(base_bevel){
+		if(hole)
+			difference(){
+				cylinder(h=base_height,d1=2*length/side_number*cos(angle)*base_scale,
+							d2=2*length/side_number*cos(angle)*base_scale*0.9,$fn=50);
+				cylinder(h=base_height,d1=2*length/side_number*cos(angle)/base_scale/2*0.8,
+							d2=2*length/side_number*cos(angle)/base_scale/2,$fn=50);}
+		else
 			cylinder(h=base_height,d1=2*length/side_number*cos(angle)*base_scale,
-						d2=2*length/side_number*cos(angle)*base_scale*0.9,$fn=50);
-			cylinder(h=base_height,d1=2*length/side_number*cos(angle)/base_scale*0.9,
-						d2=2*length/side_number*cos(angle)/base_scale,$fn=50);}
-	else
-		cylinder(h=base_height,d1=2*length/side_number*cos(angle)*base_scale,
-					d2=2*length/side_number*cos(angle)*base_scale*0.9,$fn=50);}
+						d2=2*length/side_number*cos(angle)*base_scale*0.9,$fn=50);}
+	else{
+		if(hole)
+			difference(){
+				cylinder(h=base_height,d=2*length/side_number*cos(angle)*base_scale,$fn=50);
+				cylinder(h=base_height,d=2*length/side_number*cos(angle)/base_scale/2,$fn=50);}
+		else
+			cylinder(h=base_height,d=2*length/side_number*cos(angle)*base_scale,$fn=50);}}
